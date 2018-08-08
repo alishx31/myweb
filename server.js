@@ -22,14 +22,22 @@ app.get('/',(req,res)=>{
 
 app.post('/login',(req,res)=>{
  let {email,password} =req.body;
- User.findOne({email:email},'email passsword',(err,data)=>{
-     let dbPassword = data.password;
-     if(dbPassword==password){
-         res.render('home');
-        }
+ User.findOne({email:email},(err,data)=>{
+     if(data){
+        let dbPassword = data.password;
+        if(dbPassword===password){
+            res.render('home');
+           }
+        else{
+            res.send('incorrect password');
+           }
+     
+     }
      else{
-         res.send('incorrect');
-        }
+        res.send(`${email} is not registered account`);
+        console.log('User acount not found');
+     }
+     
  })
 });
 app.post('/signup',(req,res)=>{
@@ -40,7 +48,10 @@ app.post('/signup',(req,res)=>{
     },(e)=>{
         res.send(e);
     });
+});
 
+app.get('/signup',(req,res)=>{
+    res.render('signup');
 });
 
 app.listen(3000,()=>{
